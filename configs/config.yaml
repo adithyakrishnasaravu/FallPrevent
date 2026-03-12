@@ -1,0 +1,65 @@
+# ElderWatch Configuration
+# ========================
+
+data:
+  urfall_dir: "data/urfall"
+  poses_dir: "data/poses"
+  processed_dir: "data/processed"
+  # URFall dataset structure:
+  #   fall-{01-30}-cam0-rgb.avi  (fall sequences)
+  #   adl-{01-40}-cam0-rgb.avi   (activities of daily living)
+
+pose:
+  model_complexity: 1          # 0=lite, 1=full, 2=heavy
+  min_detection_confidence: 0.5
+  min_tracking_confidence: 0.5
+  num_keypoints: 33            # MediaPipe Pose landmarks
+  keypoint_dims: 4             # x, y, z, visibility
+
+lstm:
+  sequence_length: 30          # frames per window (1 second at 30fps)
+  stride: 5                    # sliding window stride
+  input_size: 132              # 33 keypoints * 4 dims
+  hidden_size: 128
+  num_layers: 2
+  dropout: 0.3
+  batch_size: 32
+  learning_rate: 0.001
+  epochs: 50
+  fall_threshold: 0.7          # probability threshold for fall detection
+
+augmentation:
+  mirror: true
+  speed_factors: [0.8, 1.0, 1.2]
+  noise_std: 0.01
+  random_drop_prob: 0.05       # randomly zero out keypoints
+
+agent:
+  alert_mode: "local"          # local | sms | webhook
+  alert_delay_ms: 200
+  escalation_timeout_s: 60
+  stillness_threshold: 0.02    # movement magnitude below this = still
+  vlm_timeout_s: 10
+  room_id: "302"
+  caregiver_phone: ""  # caregiver destination for phone alerts
+  alert_webhook_url: ""        # optional; if set, POST JSON alert payload here
+  twilio_account_sid: ""  # optional fallback if env var not set
+  twilio_auth_token: ""        # optional fallback if env var not set
+  twilio_from_number: ""       # optional fallback if env var not set
+  patient_log_path: "data/patient_events.jsonl"
+  trigger_window_ms: 1200
+  recheck_delay_s: 1.2
+  history_seconds: 2
+  expected_fps: 30
+  motion_low_threshold: 0.02
+  motion_high_threshold: 0.05
+  recovery_motion_threshold: 0.03
+  not_fall_max_score: 0.6      # 0.0-0.6 => not fall
+  possible_fall_max_score: 0.8 # 0.6-0.8 => might have fallen
+  log_non_fall_events: true    # keep audit trail even when score is not-fall
+
+model_paths:
+  lstm: "models/fall_detector_lstm.pt"
+  pose_landmarker: "models/pose_landmarker.task"
+  gemma_270m: "models/gemma-270m-finetuned/"
+  gemma_3n: "models/gemma-3n-finetuned/"

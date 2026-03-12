@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FallPrevent | On-Device Fall Intelligence</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700&family=Playfair+Display:wght@500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="bg-grid" aria-hidden="true"></div>
+  <header class="nav shell">
+    <div class="brand">FallPrevent</div>
+    <nav>
+      <a href="#flow">Flow</a>
+      <a href="#features">Features</a>
+      <a href="#simulator">Simulator</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero shell">
+      <div class="hero-copy">
+        <p class="eyebrow">Privacy-first healthcare AI</p>
+        <h1>On-device fall response with <span>Gemma 270</span> as the decision brain.</h1>
+        <p class="lead">
+          Once the LSTM detects a fall, Gemma 270 routes a structured action: trigger an in-app notification and create a patient incident log.
+          No frame-by-frame LLM inference. No cloud dependency.
+        </p>
+        <div class="cta-row">
+          <a class="btn primary" href="#simulator">Run Incident Simulator</a>
+          <a class="btn ghost" href="#flow">See Agentic Flow</a>
+        </div>
+        <ul class="kpis">
+          <li><strong>&lt;2s</strong><span>micro re-check window</span></li>
+          <li><strong>100%</strong><span>structured JSON actions</span></li>
+          <li><strong>On-device</strong><span>patient privacy preserved</span></li>
+        </ul>
+      </div>
+      <div class="hero-panel">
+        <div class="panel-title">Current Workflow</div>
+        <ol>
+          <li>LSTM emits <code>fall=1</code></li>
+          <li>Vision features become a single event context</li>
+          <li>Gemma 270 returns strict tool-call JSON</li>
+          <li>FallPrevent shows in-app alert</li>
+          <li>Patient log entry is written to disk</li>
+        </ol>
+      </div>
+    </section>
+
+    <section id="flow" class="shell flow">
+      <h2>Agentic Event Flow</h2>
+      <div class="flow-grid">
+        <article>
+          <h3>1. Trigger</h3>
+          <p>BiLSTM detects fall probability over threshold from pose windows.</p>
+        </article>
+        <article>
+          <h3>2. Context</h3>
+          <p>Aggregate sparse video features: pose state, motion level, recovery attempt.</p>
+        </article>
+        <article>
+          <h3>3. Gemma 270 Routing</h3>
+          <p>Gemma emits validated JSON actions, including alert message and incident metadata.</p>
+        </article>
+        <article>
+          <h3>4. Action</h3>
+          <p>Local notification appears in-app and patient log is appended to <code>data/patient_events.jsonl</code>.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="features" class="shell features">
+      <h2>System Features</h2>
+      <div class="cards">
+        <article class="card">
+          <h3>Deterministic Safety</h3>
+          <p>If model output is invalid, fallback policy still alerts and logs incident.</p>
+        </article>
+        <article class="card">
+          <h3>Low-Latency Design</h3>
+          <p>Event-driven reasoning with a short re-check stage avoids impractical frame-by-frame LLM loops.</p>
+        </article>
+        <article class="card">
+          <h3>Clinical Traceability</h3>
+          <p>Each incident carries timestamp, room id, severity, status, and event type for auditability.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="simulator" class="shell simulator">
+      <div class="sim-left">
+        <h2>Incident Simulator</h2>
+        <p>Use this to demo your product narrative: <strong>Fall detected -> Gemma 270 notification -> Patient log created</strong>.</p>
+        <label class="field-label" for="fallScore">Fall score</label>
+        <input id="fallScore" type="range" min="0" max="1" step="0.01" value="0.94" />
+        <div class="score-row"><span>Current score:</span><strong id="scoreValue">0.94</strong></div>
+        <div class="threshold-row">
+          <label>Not fall max <input id="notFallMax" type="number" min="0" max="1" step="0.01" value="0.60" /></label>
+          <label>Possible fall max <input id="possibleFallMax" type="number" min="0" max="1" step="0.01" value="0.80" /></label>
+        </div>
+        <button id="simulateBtn" class="btn primary">Simulate Fall Incident</button>
+      </div>
+      <div class="sim-right">
+        <h3>In-App Notification</h3>
+        <div id="notification" class="notification hidden"></div>
+        <h3>Patient Log Preview</h3>
+        <pre id="logPreview" class="log-preview">No incidents yet.</pre>
+      </div>
+    </section>
+  </main>
+
+  <footer class="shell footer">
+    <p>FallPrevent: on-device monitoring with event-driven Gemma 270 decision routing.</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
